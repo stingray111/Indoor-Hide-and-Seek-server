@@ -127,4 +127,31 @@ app.post('/pushLocationLabel', async function (req, res) {
 
 });
 
+app.post('/locationLabelExchange', async (req, res) => {
+    try {
+        let data = await GameRoomData.findOne({_id: req.body.roomId, 'locations.UUID': req.body.uuid});
+        if (data.gameEnd) {
+            res.send({success: true, gameEnd: true});
+            return;
+        }
+        let target = data.locations.findIndex(function(ele) {
+            return ele.UUID === req.body.uuid;
+        });
+        if (target !== -1) {
+            data.locations[target].locationLabel = req.body.locationLabel;
+            data = await data.save();
+            res.send({
+                success: true,
+                gameEnd: data.gameEnd,
+                locationList: data.locations
+            });
+        } else {
+            res.send({success: false})
+        }
+    } catch(err) {
+        console.log(err);
+        res.send({success: false});
+    }
+});
+
 app.listen(3000);

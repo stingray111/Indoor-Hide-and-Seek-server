@@ -128,6 +128,7 @@ app.post('/pushLocationLabel', async function (req, res) {
 });
 
 app.post('/locationLabelExchange', async (req, res) => {
+    console.log(req.body);
     try {
         let data = await GameRoomData.findOne({_id: req.body.roomId, 'locations.uuid': req.body.uuid});
         if (data.gameEnd) {

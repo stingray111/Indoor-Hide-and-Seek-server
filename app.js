@@ -58,17 +58,6 @@ app.post('/quitRoom', async function (req, res) {
     }
 });
 
-app.post('/getLocationLabelList', async function (req, res) {
-    console.log(req.body);
-    try {
-        let data = await GameRoomData.findOne({_id: req.body.roomId});
-        if (data !== null)
-            res.send(data.locations);
-    } catch(err) {
-        console.log(err);
-    }
-});
-
 app.post('/startGame', async function (req, res) {
     console.log(req.body);
     try {
@@ -100,6 +89,17 @@ app.post('/endGame', async function (req, res) {
     } catch(err) {
         console.log(err);
         res.send({success: true})
+    }
+});
+
+app.post('/getLocationLabelList', async function (req, res) {
+    console.log(req.body);
+    try {
+        let data = await GameRoomData.findOne({_id: req.body.roomId});
+        if (data !== null)
+            res.send({gameEnd: data.gameEnd, locationList: data.locations});
+    } catch(err) {
+        console.log(err);
     }
 });
 

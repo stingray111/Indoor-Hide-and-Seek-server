@@ -11,7 +11,7 @@ app.post('/createRoom', async function (req, res) {
     let data = new GameRoomData({
         locations: [{
                 playerName: req.body.playerName,
-                UUID: req.body.uuid,
+                uuid: req.body.uuid,
                 locationLabel: 'undef'
             }],
         victim: req.body.uuid
@@ -26,7 +26,7 @@ app.post('/joinRoom', async function (req, res) {
         let data = await GameRoomData.findOne({_id: req.body.roomId});
         data.locations.push({
             playerName: req.body.playerName,
-            UUID: req.body.uuid,
+            uuid: req.body.uuid,
             locationLabel: 'undef'
         });
         await data.save();
@@ -40,9 +40,9 @@ app.post('/joinRoom', async function (req, res) {
 app.post('/quitRoom', async function (req, res) {
     console.log(req.body);
     try {
-        let data = await GameRoomData.findOne({_id: req.body.roomId, 'locations.UUID': req.body.uuid});
+        let data = await GameRoomData.findOne({_id: req.body.roomId, 'locations.uuid': req.body.uuid});
         let target = data.locations.findIndex(function(ele) {
-            return ele.UUID === req.body.uuid;
+            return ele.uuid === req.body.uuid;
         });
         if (target !== -1) {
             data.locations[target].remove();
@@ -111,7 +111,7 @@ app.post('/pushLocationLabel', async function (req, res) {
             return;
         }
         let target = data.locations.findIndex(function(ele) {
-            return ele.UUID === req.body.uuid;
+            return ele.uuid === req.body.uuid;
         });
         if (target !== -1) {
             data.locations[target].locationLabel = req.body.locationLabel;
@@ -129,13 +129,13 @@ app.post('/pushLocationLabel', async function (req, res) {
 
 app.post('/locationLabelExchange', async (req, res) => {
     try {
-        let data = await GameRoomData.findOne({_id: req.body.roomId, 'locations.UUID': req.body.uuid});
+        let data = await GameRoomData.findOne({_id: req.body.roomId, 'locations.uuid': req.body.uuid});
         if (data.gameEnd) {
             res.send({success: true, gameEnd: true});
             return;
         }
         let target = data.locations.findIndex(function(ele) {
-            return ele.UUID === req.body.uuid;
+            return ele.uuid === req.body.uuid;
         });
         if (target !== -1) {
             data.locations[target].locationLabel = req.body.locationLabel;

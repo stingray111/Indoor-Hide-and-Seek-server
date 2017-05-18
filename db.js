@@ -13,7 +13,8 @@ let gameRoomSchema = new Schema({
         playerName: {type: String, require: true},
         UUID: {type: String, require: true},
         locationLabel: {type: String, require: true}
-    }]
+    }],
+    victim: {type: String, require: true}
 });
 
 gameRoomSchema.plugin(autoIncrement.plugin, 'gameRoom');

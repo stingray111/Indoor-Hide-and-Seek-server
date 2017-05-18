@@ -13,7 +13,8 @@ app.post('/createRoom', async function (req, res) {
                 playerName: req.body.playerName,
                 UUID: req.body.uuid,
                 locationLabel: 'undef'
-            }]
+            }],
+        victim: req.body.uuid
     });
     let savedData = await data.save();
     res.send({roomId: savedData._id});
@@ -76,6 +77,16 @@ app.post('/startGame', async function (req, res) {
     } catch(err) {
         console.log(err);
         res.send({success: false})
+    }
+});
+
+app.post('/gameStartCheck', async function (req, res) {
+    console.log(req.body);
+    try {
+        let data = await GameRoomData.findOne({_id: req.body.roomId});
+        res.send({victim: data.victim, playerList: data.locations});
+    } catch(err) {
+        console.log(err);
     }
 });
 

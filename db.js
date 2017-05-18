@@ -8,6 +8,7 @@ autoIncrement.initialize(connection);
 
 let gameRoomSchema = new Schema({
     date: {type: Date, require: true, default: Date.now},
+    gameEnd: {type: Boolean, require: true, default: false},
     locations: [{
         playerName: {type: String, require: true},
         UUID: {type: String, require: true},

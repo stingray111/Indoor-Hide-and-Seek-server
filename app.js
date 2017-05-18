@@ -36,6 +36,27 @@ app.post('/joinRoom', async function (req, res) {
     }
 });
 
+app.post('/quitRoom', async function (req, res) {
+    console.log(req.body);
+    try {
+        let data = await GameRoomData.findOne({_id: req.body.roomId, 'locations.UUID': req.body.uuid});
+        let target = data.locations.findIndex(function(ele) {
+            return ele.UUID === req.body.uuid;
+        });
+        if (target !== -1) {
+            data.locations[target].remove();
+            console.log(data.locations);
+            await data.save();
+            res.send({success: true});
+        } else {
+            res.send({success: false})
+        }
+    } catch(err) {
+        console.log(err);
+        res.send({success: false, err: err});
+    }
+});
+
 app.post('/getLocationLabelList', async function (req, res) {
     console.log(req.body);
     try {
@@ -58,22 +79,39 @@ app.post('/startGame', async function (req, res) {
     }
 });
 
+app.post('/endGame', async function (req, res) {
+    console.log(req.body);
+    try {
+        let data = await GameRoomData.findOne({_id: req.body.roomId});
+        data.gameEnd = true;
+        await data.save();
+        res.send({success: true});
+    } catch(err) {
+        console.log(err);
+        res.send({success: true})
+    }
+});
+
 app.post('/pushLocationLabel', async function (req, res) {
     try {
         let data = await GameRoomData.findOne({_id: req.body.roomId, 'locations.UUID': req.body.uuid});
+        if (data.gameEnd) {
+            res.send({success: true, gameEnd: true});
+            return;
+        }
         let target = data.locations.findIndex(function(ele) {
             return ele.UUID === req.body.uuid;
         });
         if (target !== -1) {
             data.locations[target].locationLabel = req.body.locationLabel;
             await data.save();
-            res.send({success: true});
+            res.send({success: true, gameEnd: false});
         } else {
-            res.send({success: false})
+            res.send({success: false, gameEnd: false})
         }
     } catch(err) {
         console.log(err);
-        res.send({success: false});
+        res.send({success: false, gameEnd: false});
     }
 
 });

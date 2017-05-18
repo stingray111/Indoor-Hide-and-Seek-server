@@ -11,7 +11,7 @@ let gameRoomSchema = new Schema({
     gameEnd: {type: Boolean, require: true, default: false},
     locations: [{
         playerName: {type: String, require: true},
-        UUID: {type: String, require: true},
+        uuid: {type: String, require: true},
         locationLabel: {type: String, require: true}
     }],
     victim: {type: String, require: true}

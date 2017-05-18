@@ -62,7 +62,7 @@ app.post('/getLocationLabelList', async function (req, res) {
     console.log(req.body);
     try {
         let data = await GameRoomData.findOne({_id: req.body.roomId});
-        if (data === null)
+        if (data !== null)
             res.send(data.locations);
     } catch(err) {
         console.log(err);
